@@ -1,36 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import"/>
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery"/>
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow"/>
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools"/>
-    </group>
+        <item android:title="Операции">
+            <menu>
+                <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_debit"
+                    android:title="@string/nav_menu_debit"/>
+                <item
+                    android:id="@+id/nav_credit"
+                    android:title="@string/nav_menu_credit"/>
+                <item
+                    android:id="@+id/nav_trans"
+                    android:title="@string/nav_menu_trans"/>
+                </group>
+            </menu>
+        </item>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share"/>
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send"/>
-        </menu>
-    </item>
+        <item android:title="Справочники">
+            <menu>
+                <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_pockets"
+                    android:title="@string/nav_menu_pockets"/>
+                <item
+                    android:id="@+id/nav_categories"
+                    android:title="@string/nav_menu_categories"/>
+                <item
+                    android:id="@+id/nav_currencyes"
+                    android:title="@string/nav_menu_currencyes"/>
+                </group>
+            </menu>
+        </item>
+        <item android:title="Прочее">
+            <menu>
+                <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_settings"
+                    android:title="@string/nav_menu_settings"/>
+                </group>
+            </menu>
+        </item>
 
 </menu>
