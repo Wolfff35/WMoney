@@ -3,6 +3,7 @@ package com.wolff.wmoney.localdb;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by wolff on 23.05.2017.
@@ -22,7 +23,7 @@ import android.database.sqlite.SQLiteOpenHelper;
             db.execSQL(DbSchema.CREATE_CREDIT_TABLE);
             db.execSQL(DbSchema.CREATE_CURRENCY_TABLE);
             db.execSQL(DbSchema.CREATE_DEBIT_TABLE);
-
+            Log.e("CREATE TABLES","CREATED!");
         }
 
         @Override

@@ -1,15 +1,17 @@
 package com.wolff.wmoney.localdb;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.wolff.wmoney.model.WAccount;
 import com.wolff.wmoney.model.WCategory;
 import com.wolff.wmoney.model.WCurrency;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by wolff on 23.05.2017.
@@ -19,7 +21,8 @@ public class DataLab {
     private static DataLab sDataLab;
 
     private ArrayList<WCurrency> mWCurrencyList;
-    private ArrayList<WCategory> mWCategoryList;
+    private ArrayList<WCategory> mWCategoryDebitList;
+    private ArrayList<WCategory> mWCategoryCreditList;
     private ArrayList<WAccount> mWAccountList;
 
     private Context mContext;
@@ -56,17 +59,33 @@ public class DataLab {
     public ArrayList<WCurrency> getWCurrencyList(){
         DbCursorWrapper cursorWrapper = queryWCurrency();
         mWCurrencyList = new ArrayList<>();
-        try {
             cursorWrapper.moveToFirst();
             while (!cursorWrapper.isAfterLast()) {
                 mWCurrencyList.add(cursorWrapper.getWCurrency());
+                Log.e("getWCurrencyList","added = "+cursorWrapper.getWCurrency().getName());
                 cursorWrapper.moveToNext();
             }
-        }catch (Exception e){
-
-        }finally {
             cursorWrapper.close();
-        }
     return mWCurrencyList;
+    }
+    public void addWCurrencyToDb(WCurrency currency){
+        ContentValues values = getContentValues_WCurrency(currency);
+        mDatabase.insert(DbSchema.Table_Currency.TABLE_NAME,null,values);
+    }
+    private static ContentValues getContentValues_WCurrency(WCurrency currency){
+        ContentValues values = new ContentValues();
+        //values.put(DbSchema.BaseColumns.ID,currency.getId());
+        values.put(DbSchema.BaseColumns.NAME,currency.getName());
+        values.put(DbSchema.BaseColumns.DESCRIBE,currency.getDescribe());
+        values.put(DbSchema.BaseColumns.DATE_CREATION,new Date().getTime());
+        return values;
+    }
+    public WCurrency fingCurrencyById(double idCurr){
+        for (WCurrency item:mWCurrencyList) {
+            if(item.getId()==idCurr){
+                return item;
+            }
+        }
+        return null;
     }
 }

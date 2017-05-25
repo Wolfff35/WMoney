@@ -1,11 +1,14 @@
 package com.wolff.wmoney.localdb;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
 import com.wolff.wmoney.model.WAccount;
 import com.wolff.wmoney.model.WCategory;
 import com.wolff.wmoney.model.WCurrency;
+
+import java.util.Date;
 
 /**
  * Created by wolff on 23.05.2017.
@@ -17,29 +20,35 @@ public class DbCursorWrapper extends CursorWrapper {
         super(cursor);
     }
     public WCurrency getWCurrency(){
-        String s_id = getString(getColumnIndex(DbSchema.BaseColumns.ID));
+        int s_id = getInt(getColumnIndex(DbSchema.BaseColumns.ID));
         String s_name = getString(getColumnIndex(DbSchema.BaseColumns.NAME));
         String s_describe = getString(getColumnIndex(DbSchema.BaseColumns.DESCRIBE));
         WCurrency currency = new WCurrency();
         currency.setId(s_id);
         currency.setName(s_name);
         currency.setDescribe(s_describe);
+        currency.setDateCreation(new Date(getInt(getColumnIndex(DbSchema.BaseColumns.DATE_CREATION))));
         return currency;
      }
-    public WCategory getWCategory(){
-        String s_id = getString(getColumnIndex(DbSchema.BaseColumns.ID));
+    public WCategory getWCategory(int isCredit){
+        //0 - all, 1 - credit,2 - debit
+        int s_id = getInt(getColumnIndex(DbSchema.BaseColumns.ID));
         String s_name = getString(getColumnIndex(DbSchema.BaseColumns.NAME));
         String s_describe = getString(getColumnIndex(DbSchema.BaseColumns.DESCRIBE));
         boolean isCred = (getInt(getColumnIndex(DbSchema.Table_Category.Cols.ISCREDIT))==1);
-        WCategory category = new WCategory();
-        category.setId(s_id);
-        category.setName(s_name);
-        category.setDescribe(s_describe);
-        category.setCredit(isCred);
-        return category;
+        if((isCredit==0)|(isCred==(isCredit==1))){
+            WCategory category = new WCategory();
+            category.setId(s_id);
+            category.setName(s_name);
+            category.setDescribe(s_describe);
+            category.setCredit(isCred);
+            category.setDateCreation(new Date(getInt(getColumnIndex(DbSchema.BaseColumns.DATE_CREATION))));
+            return category;
+        }
+        return null;
     }
-    public WAccount getWAccount(){
-        String s_id = getString(getColumnIndex(DbSchema.BaseColumns.ID));
+    public WAccount getWAccount(Context context){
+        int s_id = getInt(getColumnIndex(DbSchema.BaseColumns.ID));
         String s_name = getString(getColumnIndex(DbSchema.BaseColumns.NAME));
         String s_describe = getString(getColumnIndex(DbSchema.BaseColumns.DESCRIBE));
 
@@ -52,7 +61,9 @@ public class DbCursorWrapper extends CursorWrapper {
         account.setDescribe(s_describe);
         account.setIdPicture(id_pict);
         account.setSumma(sum);
-        //account.setCurrency(); TODO getting currency
+        account.setDateCreation(new Date(getInt(getColumnIndex(DbSchema.BaseColumns.DATE_CREATION))));
+        DataLab dataLab = DataLab.get(context);
+        account.setCurrency(dataLab.fingCurrencyById(id_curr));
         return account;
     }
 }

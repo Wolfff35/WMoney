@@ -1,14 +1,23 @@
 package com.wolff.wmoney.model;
 
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * Created by wolff on 23.05.2017.
  */
 
-public class WAccount extends WBase {
+public class WAccount extends WBase implements Serializable {
+    private static final long serialVersionUID = 1163051468057804396L;
+
     private int mIdPicture;
     private double mSumma;
     private WCurrency mCurrency;
+
+    public WAccount(){
+        //this.setDateCreation(new Date());
+    }
 
     public int getIdPicture() {
         return mIdPicture;

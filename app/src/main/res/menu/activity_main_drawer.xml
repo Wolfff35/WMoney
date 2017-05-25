@@ -21,7 +21,7 @@
             <menu>
                 <group android:checkableBehavior="single">
                 <item
-                    android:id="@+id/nav_pockets"
+                    android:id="@+id/nav_accounts"
                     android:title="@string/nav_menu_pockets"/>
                 <item
                     android:id="@+id/nav_categories"

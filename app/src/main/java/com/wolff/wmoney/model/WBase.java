@@ -1,19 +1,33 @@
 package com.wolff.wmoney.model;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * Created by wolff on 23.05.2017.
  */
 
-public class WBase {
-    private String mId;
+public class WBase implements Serializable{
+    private static final long serialVersionUID = 1263051468057804396L;
+
+    private int mId;
     private String mName;
     private String mDescribe;
+    private Date mDateCreation;
 
-    public String getId() {
+    public Date getDateCreation() {
+        return mDateCreation;
+    }
+
+    public void setDateCreation(Date dateCreation) {
+        mDateCreation = dateCreation;
+    }
+
+    public int getId() {
         return mId;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.mId = id;
     }
 
