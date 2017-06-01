@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ <integer-array name="account_pictures_array">
+     <item>@drawable/pict_account_1</item>
+     <item>@drawable/pict_account_2</item>
+ </integer-array>
+
+</resources>

@@ -6,6 +6,7 @@ import android.database.CursorWrapper;
 
 import com.wolff.wmoney.model.WAccount;
 import com.wolff.wmoney.model.WCategory;
+import com.wolff.wmoney.model.WCredit;
 import com.wolff.wmoney.model.WCurrency;
 
 import java.util.Date;
@@ -63,7 +64,33 @@ public class DbCursorWrapper extends CursorWrapper {
         account.setSumma(sum);
         account.setDateCreation(new Date(getInt(getColumnIndex(DbSchema.BaseColumns.DATE_CREATION))));
         DataLab dataLab = DataLab.get(context);
-        account.setCurrency(dataLab.fingCurrencyById(id_curr));
+        account.setCurrency(dataLab.fingCurrencyById(id_curr,DataLab.get(context).getWCurrencyList()));
         return account;
     }
+    public WCredit getWCredit(Context context){
+        int s_id = getInt(getColumnIndex(DbSchema.BaseColumns.ID));
+        String s_name = getString(getColumnIndex(DbSchema.BaseColumns.NAME));
+        String s_describe = getString(getColumnIndex(DbSchema.BaseColumns.DESCRIBE));
+
+        int id_acc = getInt(getColumnIndex(DbSchema.Table_OperDebCred.Cols.ID_ACCOUNT));
+        int id_curr = getInt(getColumnIndex(DbSchema.Table_OperDebCred.Cols.ID_CURRENCY));
+        int id_cat = getInt(getColumnIndex(DbSchema.Table_OperDebCred.Cols.ID_CATEGORY));
+        double sum = getDouble(getColumnIndex(DbSchema.Table_OperDebCred.Cols.SUMMA));
+        double sumVal = getDouble(getColumnIndex(DbSchema.Table_OperDebCred.Cols.SUMMA_VAL));
+        int datOper = getInt(getColumnIndex(DbSchema.Table_OperDebCred.Cols.DATE_OPER));
+        WCredit credit = new WCredit();
+        credit.setId(s_id);
+        credit.setName(s_name);
+        credit.setDescribe(s_describe);
+        credit.setSumma(sum);
+        credit.setSummaVal(sumVal);
+        credit.setDateOper(new Date(datOper));
+        credit.setDateCreation(new Date(getInt(getColumnIndex(DbSchema.BaseColumns.DATE_CREATION))));
+        DataLab dataLab = DataLab.get(context);
+        credit.setCurrency(dataLab.fingCurrencyById(id_curr,DataLab.get(context).getWCurrencyList()));
+        credit.setAccount(dataLab.fingAccountById(id_acc,DataLab.get(context).getWAccountList(context)));
+        credit.setCategory(dataLab.fingCategoryById(id_cat,DataLab.get(context).getWCategoryList(0)));
+        return credit;
+    }
+
 }

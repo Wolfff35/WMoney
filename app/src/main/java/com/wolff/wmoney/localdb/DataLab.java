@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.wolff.wmoney.Utils.DateUtils;
 import com.wolff.wmoney.model.WAccount;
 import com.wolff.wmoney.model.WCategory;
+import com.wolff.wmoney.model.WCredit;
 import com.wolff.wmoney.model.WCurrency;
 
 import java.util.ArrayList;
@@ -20,10 +22,10 @@ import java.util.Date;
 public class DataLab {
     private static DataLab sDataLab;
 
-    private ArrayList<WCurrency> mWCurrencyList;
-    private ArrayList<WCategory> mWCategoryDebitList;
-    private ArrayList<WCategory> mWCategoryCreditList;
-    private ArrayList<WAccount> mWAccountList;
+    //private ArrayList<WCurrency> mWCurrencyList;
+   // private ArrayList<WCategory> mWCategoryDebitList;
+   // private ArrayList<WCategory> mWCategoryCreditList;
+   // private ArrayList<WAccount> mWAccountList;
 
     private Context mContext;
     private SQLiteDatabase mDatabase;
@@ -54,38 +56,304 @@ public class DataLab {
                 groupBy,
                 having,
                 orderBy);
+       // Log.e("QUERY","=== QUERY");
         return new DbCursorWrapper(cursor);
     }
     public ArrayList<WCurrency> getWCurrencyList(){
         DbCursorWrapper cursorWrapper = queryWCurrency();
-        mWCurrencyList = new ArrayList<>();
+        ArrayList<WCurrency> currencyList = new ArrayList<>();
             cursorWrapper.moveToFirst();
             while (!cursorWrapper.isAfterLast()) {
-                mWCurrencyList.add(cursorWrapper.getWCurrency());
-                Log.e("getWCurrencyList","added = "+cursorWrapper.getWCurrency().getName());
+                currencyList.add(cursorWrapper.getWCurrency());
                 cursorWrapper.moveToNext();
             }
             cursorWrapper.close();
-    return mWCurrencyList;
-    }
-    public void addWCurrencyToDb(WCurrency currency){
-        ContentValues values = getContentValues_WCurrency(currency);
-        mDatabase.insert(DbSchema.Table_Currency.TABLE_NAME,null,values);
+    return currencyList;
     }
     private static ContentValues getContentValues_WCurrency(WCurrency currency){
         ContentValues values = new ContentValues();
         //values.put(DbSchema.BaseColumns.ID,currency.getId());
         values.put(DbSchema.BaseColumns.NAME,currency.getName());
         values.put(DbSchema.BaseColumns.DESCRIBE,currency.getDescribe());
-        values.put(DbSchema.BaseColumns.DATE_CREATION,new Date().getTime());
+        if(currency.getDateCreation()==null) {
+            values.put(DbSchema.BaseColumns.DATE_CREATION, new Date().getTime());
+        }
         return values;
     }
-    public WCurrency fingCurrencyById(double idCurr){
-        for (WCurrency item:mWCurrencyList) {
+    public WCurrency fingCurrencyById(double idCurr,ArrayList<WCurrency> currencyList){
+
+        for (WCurrency item:currencyList) {
             if(item.getId()==idCurr){
                 return item;
             }
         }
         return null;
     }
+    public void currency_add(WCurrency currency){
+        ContentValues values = getContentValues_WCurrency(currency);
+        mDatabase.insert(DbSchema.Table_Currency.TABLE_NAME,null,values);
+        Log.e("add currency","Success");
+    }
+    public void currency_update(WCurrency currency){
+        ContentValues values = getContentValues_WCurrency(currency);
+        mDatabase.update(
+                DbSchema.Table_Currency.TABLE_NAME,
+                values,
+                DbSchema.BaseColumns.ID+" = ?",
+                new String[]{String.valueOf(currency.getId())}
+        );
+        Log.e("update currency"," Success");
+    }
+    public void currency_delete(WCurrency currency){
+        mDatabase.delete(
+                DbSchema.Table_Currency.TABLE_NAME,
+                DbSchema.BaseColumns.ID+" =?",
+                new String[]{String.valueOf(currency.getId())}
+        );
+        Log.e("delete currency","Success");
+    }
+    //==============================================================================================
+    private DbCursorWrapper queryWAccount(){
+        String[] columns = null;
+        String selection = null;
+        String[] selectionArgs = null;
+        String groupBy = null;
+        String having = null;
+        String orderBy = null;
+
+        Cursor cursor = mDatabase.query(DbSchema.Table_Account.TABLE_NAME,
+                columns,
+                selection,
+                selectionArgs,
+                groupBy,
+                having,
+                orderBy);
+        //Log.e("QUERY","=== QUERY");
+        return new DbCursorWrapper(cursor);
+    }
+    public ArrayList<WAccount> getWAccountList(Context context){
+        DbCursorWrapper cursorWrapper = queryWAccount();
+        ArrayList<WAccount>accountList = new ArrayList<>();
+        cursorWrapper.moveToFirst();
+        while (!cursorWrapper.isAfterLast()) {
+            accountList.add(cursorWrapper.getWAccount(context));
+            cursorWrapper.moveToNext();
+        }
+        cursorWrapper.close();
+        return accountList;
+    }
+    private static ContentValues getContentValues_WAccount(WAccount account){
+        ContentValues values = new ContentValues();
+        //values.put(DbSchema.BaseColumns.ID,currency.getId());
+        values.put(DbSchema.BaseColumns.NAME,account.getName());
+        values.put(DbSchema.BaseColumns.DESCRIBE,account.getDescribe());
+        values.put(DbSchema.Table_Account.Cols.ID_CURRENCY,account.getCurrency().getId());
+        values.put(DbSchema.Table_Account.Cols.ID_PICTURE,account.getIdPicture());
+        values.put(DbSchema.Table_Account.Cols.SUMMA,account.getSumma());
+        if(account.getDateCreation()==null) {
+            values.put(DbSchema.BaseColumns.DATE_CREATION, new Date().getTime());
+        }
+        return values;
+    }
+    public WAccount fingAccountById(double idAcc,ArrayList<WAccount>accountList){
+        for (WAccount item:accountList) {
+            if(item.getId()==idAcc){
+                return item;
+            }
+        }
+        return null;
+    }
+    public void account_add(WAccount account){
+        ContentValues values = getContentValues_WAccount(account);
+        mDatabase.insert(DbSchema.Table_Account.TABLE_NAME,null,values);
+        Log.e("add account","Success");
+    }
+    public void account_update(WAccount account){
+        ContentValues values = getContentValues_WAccount(account);
+        mDatabase.update(
+                DbSchema.Table_Account.TABLE_NAME,
+                values,
+                DbSchema.BaseColumns.ID+" = ?",
+                new String[]{String.valueOf(account.getId())}
+        );
+        Log.e("update account"," Success");
+    }
+    public void account_delete(WAccount account){
+        mDatabase.delete(
+                DbSchema.Table_Account.TABLE_NAME,
+                DbSchema.BaseColumns.ID+" =?",
+                new String[]{String.valueOf(account.getId())}
+        );
+        Log.e("delete account","Success");
+    }
+//==================================================================================================
+private DbCursorWrapper queryWCategory(int isCredit){
+    //0 - all, 1 - credit,2 - debit
+    String selection;
+    String[] selectionArgs;
+    String[] columns = null;
+    String groupBy = null;
+    String having = null;
+    String orderBy = null;
+    if(isCredit==0) {
+        selection = null;
+        selectionArgs = null;
+        Log.e("SELECTION","category = all");
+    }else if (isCredit==1){
+        selection = DbSchema.Table_Category.Cols.ISCREDIT+" = ?";
+        selectionArgs = new String[]{"1"};
+        Log.e("SELECTION","category = CREDIT");
+    }else if (isCredit==2){
+        selection = DbSchema.Table_Category.Cols.ISCREDIT+" = ?";
+        selectionArgs = new String[]{"0"};
+        Log.e("SELECTION","category = DEBIT");
+    }else {
+        selection = null;
+        selectionArgs = null;
+        Log.e("SELECTION","category = all");
+    }
+
+    Cursor cursor = mDatabase.query(DbSchema.Table_Category.TABLE_NAME,
+            columns,
+            selection,
+            selectionArgs,
+            groupBy,
+            having,
+            orderBy);
+    return new DbCursorWrapper(cursor);
+}
+    public ArrayList<WCategory> getWCategoryList(int isCredit){
+        DbCursorWrapper cursorWrapper = queryWCategory(isCredit);
+        ArrayList<WCategory> categoryList = new ArrayList<>();
+        cursorWrapper.moveToFirst();
+        while (!cursorWrapper.isAfterLast()) {
+            categoryList.add(cursorWrapper.getWCategory(isCredit));
+            cursorWrapper.moveToNext();
+        }
+        cursorWrapper.close();
+        return categoryList;
+    }
+    private static ContentValues getContentValues_WCategory(WCategory category){
+        ContentValues values = new ContentValues();
+        values.put(DbSchema.BaseColumns.NAME,category.getName());
+        values.put(DbSchema.BaseColumns.DESCRIBE,category.getDescribe());
+        values.put(DbSchema.Table_Category.Cols.ISCREDIT,((category.isCredit()?1:0)));
+        if(category.getDateCreation()==null) {
+            values.put(DbSchema.BaseColumns.DATE_CREATION, new Date().getTime());
+        }
+        return values;
+    }
+    public WCategory fingCategoryById(double idCategory,ArrayList<WCategory> categoryList){
+
+        for (WCategory item:categoryList) {
+            if(item.getId()==idCategory){
+                return item;
+            }
+        }
+        return null;
+    }
+    public void category_add(WCategory category){
+        ContentValues values = getContentValues_WCategory(category);
+        mDatabase.insert(DbSchema.Table_Category.TABLE_NAME,null,values);
+        Log.e("add category","Success");
+    }
+    public void category_update(WCategory category){
+        ContentValues values = getContentValues_WCategory(category);
+        mDatabase.update(
+                DbSchema.Table_Category.TABLE_NAME,
+                values,
+                DbSchema.BaseColumns.ID+" = ?",
+                new String[]{String.valueOf(category.getId())}
+        );
+        Log.e("update category"," Success");
+    }
+    public void category_delete(WCategory category){
+        mDatabase.delete(
+                DbSchema.Table_Category.TABLE_NAME,
+                DbSchema.BaseColumns.ID+" =?",
+                new String[]{String.valueOf(category.getId())}
+        );
+        Log.e("delete category","Success");
+    }
+    //==================================================================================================
+    private DbCursorWrapper queryWCredit(){
+       String selection=null;
+        String[] selectionArgs = null;
+        String[] columns = null;
+        String groupBy = null;
+        String having = null;
+        String orderBy = null;
+         Cursor cursor = mDatabase.query(DbSchema.Table_Credit.TABLE_NAME,
+                columns,
+                selection,
+                selectionArgs,
+                groupBy,
+                having,
+                orderBy);
+        return new DbCursorWrapper(cursor);
+    }
+    public ArrayList<WCredit> getWCreditList(Context context){
+        DbCursorWrapper cursorWrapper = queryWCredit();
+        ArrayList<WCredit> creditList = new ArrayList<>();
+        cursorWrapper.moveToFirst();
+        while (!cursorWrapper.isAfterLast()) {
+            creditList.add(cursorWrapper.getWCredit(context));
+            cursorWrapper.moveToNext();
+        }
+        cursorWrapper.close();
+        return creditList;
+    }
+    private static ContentValues getContentValues_WCredit(WCredit credit){
+        ContentValues values = new ContentValues();
+        values.put(DbSchema.BaseColumns.NAME,credit.getName());
+        values.put(DbSchema.BaseColumns.DESCRIBE,credit.getDescribe());
+        values.put(DbSchema.Table_OperDebCred.Cols.ID_ACCOUNT,credit.getAccount().getId());
+        values.put(DbSchema.Table_OperDebCred.Cols.ID_CURRENCY,credit.getCurrency().getId());
+        values.put(DbSchema.Table_OperDebCred.Cols.ID_CATEGORY,credit.getCategory().getId());
+        values.put(DbSchema.Table_OperDebCred.Cols.SUMMA,credit.getSumma());
+        values.put(DbSchema.Table_OperDebCred.Cols.SUMMA_VAL,credit.getSummaVal());
+        values.put(DbSchema.Table_OperDebCred.Cols.DATE_OPER,credit.getDateOper().getTime());
+        DateUtils dateUtils = new DateUtils();
+        values.put(DbSchema.Table_OperDebCred.Cols.DATE_OPER_STR,dateUtils.dateToString(credit.getDateOper(),
+                DateUtils.DATE_FORMAT_VID));
+
+        if(credit.getDateCreation()==null) {
+            values.put(DbSchema.BaseColumns.DATE_CREATION, new Date().getTime());
+        }
+        return values;
+    }
+    public WCredit fingCreditById(double idCredit,ArrayList<WCredit> creditList){
+
+        for (WCredit item:creditList) {
+            if(item.getId()==idCredit){
+                return item;
+            }
+        }
+        return null;
+    }
+    public void credit_add(WCredit credit){
+        ContentValues values = getContentValues_WCredit(credit);
+        mDatabase.insert(DbSchema.Table_Credit.TABLE_NAME,null,values);
+        Log.e("add credit","Success");
+    }
+    public void credit_update(WCredit credit){
+        ContentValues values = getContentValues_WCredit(credit);
+        mDatabase.update(
+                DbSchema.Table_Credit.TABLE_NAME,
+                values,
+                DbSchema.BaseColumns.ID+" = ?",
+                new String[]{String.valueOf(credit.getId())}
+        );
+        Log.e("update credit"," Success");
+    }
+    public void credit_delete(WCredit credit){
+        mDatabase.delete(
+                DbSchema.Table_Credit.TABLE_NAME,
+                DbSchema.BaseColumns.ID+" =?",
+                new String[]{String.valueOf(credit.getId())}
+        );
+        Log.e("delete credit","Success");
+    }
+
+
 }

@@ -13,9 +13,21 @@
     <string name="nav_menu_credit">Расходы</string>
     <string name="nav_menu_trans">Переводы</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_save">Сохранить</string>
     <string name="action_edit">Редактировать</string>
     <string name="action_delete">Удалить</string>
+
+    <string name="currency_name_label">Кратко</string>
+    <string name="currency_describe_label">Наименование</string>
+    <string name="title_activity_currency_item">Валюта</string>
+    <string name="title_activity_account_item">Кошелек</string>
+
+    <string name="account_describe_label">Описание</string>
+    <string name="account_name_label">Наименование</string>
+    <string name="account_summa_label">Остаток</string>
+    <string name="title_activity_category_item">Статья дохода/расхода</string>
+    <string name="category_name_label">Наименование</string>
+    <string name="category_describe_label">Описание</string>
+    <string name="isDebit">Доход</string>
+    <string name="isCredit">Затрата</string>
 </resources>

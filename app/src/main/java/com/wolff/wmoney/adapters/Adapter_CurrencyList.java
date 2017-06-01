@@ -1,6 +1,7 @@
 package com.wolff.wmoney.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +26,11 @@ public class Adapter_CurrencyList extends BaseAdapter {
         mContext=context;
         mCurrencyList=currencyList;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+       // Log.e("ADAPTER","CONSTRUCTOR");
     }
     @Override
     public int getCount() {
+        //Log.e("ADAPTER","count = "+mCurrencyList.size());
         return mCurrencyList.size();
     }
 
@@ -50,6 +53,7 @@ public class Adapter_CurrencyList extends BaseAdapter {
         WCurrency curr = (WCurrency)getItem(position);
         TextView tvNameCurr = (TextView) view.findViewById(R.id.tvNameCurr);
         tvNameCurr.setText(curr.getName()+" / "+curr.getDescribe());
+       // Log.e("ADAPTER","getView");
         return view;
     }
 }

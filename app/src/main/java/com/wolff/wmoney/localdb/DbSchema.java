@@ -38,6 +38,8 @@ public class DbSchema {
             Table_OperDebCred.Cols.ID_CURRENCY+" INTEGER, "+
             Table_OperDebCred.Cols.ID_CATEGORY+" INTEGER, "+
             Table_OperDebCred.Cols.SUMMA+" REAL, "+
+            Table_OperDebCred.Cols.SUMMA_VAL+" REAL, "+
+           // Table_OperDebCred.Cols.COURSE_VAL+" REAL, "+
             Table_OperDebCred.Cols.DATE_OPER+" INTEGER, "+
             Table_OperDebCred.Cols.DATE_OPER_STR+" TEXT, " +
                     "FOREIGN KEY ("+ Table_OperDebCred.Cols.ID_CATEGORY+") REFERENCES "+Table_Category.TABLE_NAME+"("+BaseColumns.ID+"), "+
