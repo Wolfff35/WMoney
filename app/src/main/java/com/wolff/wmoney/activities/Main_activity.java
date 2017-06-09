@@ -17,13 +17,13 @@ import android.view.MenuItem;
 
 import com.wolff.wmoney.R;
 import com.wolff.wmoney.fragments.category.Category_list_fragment;
-import com.wolff.wmoney.fragments.credit.Credit_list_fragment;
+import com.wolff.wmoney.fragments.operation.Operation_list_fragment;
 import com.wolff.wmoney.fragments.misc.Logo_fragment;
 import com.wolff.wmoney.fragments.account.Account_list_fragment;
 import com.wolff.wmoney.fragments.currency.Currency_list_fragment;
 import com.wolff.wmoney.model.WAccount;
 import com.wolff.wmoney.model.WCategory;
-import com.wolff.wmoney.model.WCredit;
+import com.wolff.wmoney.model.WOperation;
 import com.wolff.wmoney.model.WCurrency;
 import com.wolff.wmoney.test_data.Test_data;
 
@@ -33,7 +33,7 @@ public class Main_activity extends AppCompatActivity
         Currency_list_fragment.Currency_list_fragment_listener,
         Account_list_fragment.Account_list_fragment_listener,
         Category_list_fragment.Category_list_fragment_listener,
-        Credit_list_fragment.Credit_list_fragment_listener{
+        Operation_list_fragment.Operation_list_fragment_listener {
     FloatingActionButton fab;
     private Fragment mCurrentFragment;
     @Override
@@ -60,7 +60,7 @@ public class Main_activity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         mCurrentFragment = new Logo_fragment();
         displayFragment();
-         writeTEstData();
+         //writeTEstData();
     }
 
     @Override
@@ -91,7 +91,7 @@ public class Main_activity extends AppCompatActivity
                 //displayFragment();
                 break;
             case R.id.nav_credit:
-                mCurrentFragment = Credit_list_fragment.newInstance();
+                mCurrentFragment = Operation_list_fragment.newInstance();
                 break;
             case R.id.nav_currencyes:
                 mCurrentFragment = Currency_list_fragment.newInstance();
@@ -125,7 +125,8 @@ public class Main_activity extends AppCompatActivity
         fragmentTransaction.commit();
         if (mCurrentFragment.getClass().getSimpleName().equalsIgnoreCase("Account_list_fragment")|
                 mCurrentFragment.getClass().getSimpleName().equalsIgnoreCase("Category_list_fragment")|
-                mCurrentFragment.getClass().getSimpleName().equalsIgnoreCase("Currency_list_fragment")) {
+                mCurrentFragment.getClass().getSimpleName().equalsIgnoreCase("Currency_list_fragment")|
+                mCurrentFragment.getClass().getSimpleName().equalsIgnoreCase("Operation_list_fragment")) {
             fab.setVisibility(View.VISIBLE);
         } else {
             fab.setVisibility(View.INVISIBLE);
@@ -149,6 +150,9 @@ public class Main_activity extends AppCompatActivity
                 break;
             case "Currency_list_fragment":
                 intent = Currency_item_activity.newIntent(getApplicationContext(),null);
+                break;
+            case "Operation_list_fragment":
+                intent = Credit_item_activity.newIntent(getApplicationContext(),null);
                 break;
             default:
                 break;
@@ -178,9 +182,9 @@ public class Main_activity extends AppCompatActivity
     }
 
     @Override
-    public void onCreditItemClick(WCredit credit) {
-        //Intent intent = Credit_item_activity.newIntent(getApplicationContext(),credit);
-        //startActivity(intent);
+    public void onCreditItemClick(WOperation credit) {
+        Intent intent = Credit_item_activity.newIntent(getApplicationContext(),credit);
+        startActivity(intent);
         Log.e("CATEGORY"," ITEM CLICK "+credit.getName());
 
     }

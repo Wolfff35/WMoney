@@ -23,13 +23,13 @@ public class Account_item_activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.account_item_activity);
+        setContentView(R.layout.item_activity);
         mAccountItem = (WAccount)getIntent().getSerializableExtra(EXTRA_ACCOUNT_ITEM);
         Account_item_fragment account_itemFragment = Account_item_fragment.newIntance(mAccountItem);
 
         FragmentTransaction fragmentTransaction;
         fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.account_item_container, account_itemFragment);
+        fragmentTransaction.replace(R.id.item_container, account_itemFragment);
         fragmentTransaction.commit();
 
 

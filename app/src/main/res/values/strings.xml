@@ -20,14 +20,24 @@
     <string name="currency_name_label">Кратко</string>
     <string name="currency_describe_label">Наименование</string>
     <string name="title_activity_currency_item">Валюта</string>
+
     <string name="title_activity_account_item">Кошелек</string>
 
     <string name="account_describe_label">Описание</string>
     <string name="account_name_label">Наименование</string>
     <string name="account_summa_label">Остаток</string>
+
     <string name="title_activity_category_item">Статья дохода/расхода</string>
     <string name="category_name_label">Наименование</string>
     <string name="category_describe_label">Описание</string>
     <string name="isDebit">Доход</string>
     <string name="isCredit">Затрата</string>
+    <string name="title_activity_credit_item_activity">Расходы</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="operation_name_label">Название операции</string>
+    <string name="operation_describe_label">Описание</string>
+    <string name="operation_summa_label">Сумма операции</string>
+    <string name="title_category_item_credit">Статья</string>
+    <string name="title_period_item_credit">Период</string>
 </resources>

@@ -24,13 +24,13 @@ public class Category_item_activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.category_item_activity);
+        setContentView(R.layout.item_activity);
         mCategoryItem = (WCategory)getIntent().getSerializableExtra(EXTRA_CATEGORY_ITEM);
         Category_item_fragment category_itemFragment = Category_item_fragment.newIntance(mCategoryItem);
 
         FragmentTransaction fragmentTransaction;
         fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.category_item_container, category_itemFragment);
+        fragmentTransaction.replace(R.id.item_container, category_itemFragment);
         fragmentTransaction.commit();
 
 

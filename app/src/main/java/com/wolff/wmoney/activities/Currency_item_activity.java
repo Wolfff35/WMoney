@@ -24,13 +24,13 @@ public class Currency_item_activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.currency_item_activity);
+        setContentView(R.layout.item_activity);
         mCurrencyItem = (WCurrency)getIntent().getSerializableExtra(EXTRA_CURRENCY_ITEM);
         Currency_item_fragment currency_itemFragment = Currency_item_fragment.newIntance(mCurrencyItem);
 
         FragmentTransaction fragmentTransaction;
         fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.currency_item_container, currency_itemFragment);
+        fragmentTransaction.replace(R.id.item_container, currency_itemFragment);
         fragmentTransaction.commit();
 
 

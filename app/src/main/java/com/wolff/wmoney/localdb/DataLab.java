@@ -9,7 +9,7 @@ import android.util.Log;
 import com.wolff.wmoney.Utils.DateUtils;
 import com.wolff.wmoney.model.WAccount;
 import com.wolff.wmoney.model.WCategory;
-import com.wolff.wmoney.model.WCredit;
+import com.wolff.wmoney.model.WOperation;
 import com.wolff.wmoney.model.WCurrency;
 
 import java.util.ArrayList;
@@ -21,11 +21,6 @@ import java.util.Date;
 
 public class DataLab {
     private static DataLab sDataLab;
-
-    //private ArrayList<WCurrency> mWCurrencyList;
-   // private ArrayList<WCategory> mWCategoryDebitList;
-   // private ArrayList<WCategory> mWCategoryCreditList;
-   // private ArrayList<WAccount> mWAccountList;
 
     private Context mContext;
     private SQLiteDatabase mDatabase;
@@ -76,7 +71,7 @@ public class DataLab {
         values.put(DbSchema.BaseColumns.NAME,currency.getName());
         values.put(DbSchema.BaseColumns.DESCRIBE,currency.getDescribe());
         if(currency.getDateCreation()==null) {
-            values.put(DbSchema.BaseColumns.DATE_CREATION, new Date().getTime());
+            values.put(DbSchema.BaseColumns.DATE_CREATION, new DateUtils().dateToString(new Date(),DateUtils.DATE_FORMAT_SAVE));
         }
         return values;
     }
@@ -151,7 +146,7 @@ public class DataLab {
         values.put(DbSchema.Table_Account.Cols.ID_PICTURE,account.getIdPicture());
         values.put(DbSchema.Table_Account.Cols.SUMMA,account.getSumma());
         if(account.getDateCreation()==null) {
-            values.put(DbSchema.BaseColumns.DATE_CREATION, new Date().getTime());
+            values.put(DbSchema.BaseColumns.DATE_CREATION, new DateUtils().dateToString(new Date(),DateUtils.DATE_FORMAT_SAVE));
         }
         return values;
     }
@@ -239,7 +234,7 @@ private DbCursorWrapper queryWCategory(int isCredit){
         values.put(DbSchema.BaseColumns.DESCRIBE,category.getDescribe());
         values.put(DbSchema.Table_Category.Cols.ISCREDIT,((category.isCredit()?1:0)));
         if(category.getDateCreation()==null) {
-            values.put(DbSchema.BaseColumns.DATE_CREATION, new Date().getTime());
+            values.put(DbSchema.BaseColumns.DATE_CREATION, new DateUtils().dateToString(new Date(),DateUtils.DATE_FORMAT_SAVE));
         }
         return values;
     }
@@ -292,9 +287,9 @@ private DbCursorWrapper queryWCategory(int isCredit){
                 orderBy);
         return new DbCursorWrapper(cursor);
     }
-    public ArrayList<WCredit> getWCreditList(Context context){
+    public ArrayList<WOperation> getWCreditList(Context context){
         DbCursorWrapper cursorWrapper = queryWCredit();
-        ArrayList<WCredit> creditList = new ArrayList<>();
+        ArrayList<WOperation> creditList = new ArrayList<>();
         cursorWrapper.moveToFirst();
         while (!cursorWrapper.isAfterLast()) {
             creditList.add(cursorWrapper.getWCredit(context));
@@ -303,40 +298,49 @@ private DbCursorWrapper queryWCategory(int isCredit){
         cursorWrapper.close();
         return creditList;
     }
-    private static ContentValues getContentValues_WCredit(WCredit credit){
+    private static ContentValues getContentValues_WCredit(WOperation credit){
+        DateUtils dateUtils = new DateUtils();
         ContentValues values = new ContentValues();
         values.put(DbSchema.BaseColumns.NAME,credit.getName());
         values.put(DbSchema.BaseColumns.DESCRIBE,credit.getDescribe());
-        values.put(DbSchema.Table_OperDebCred.Cols.ID_ACCOUNT,credit.getAccount().getId());
-        values.put(DbSchema.Table_OperDebCred.Cols.ID_CURRENCY,credit.getCurrency().getId());
-        values.put(DbSchema.Table_OperDebCred.Cols.ID_CATEGORY,credit.getCategory().getId());
+        WAccount lAccount = credit.getAccount();
+        if(lAccount!=null) {
+            values.put(DbSchema.Table_OperDebCred.Cols.ID_ACCOUNT, lAccount.getId());
+            WCurrency lCurrency = credit.getAccount().getCurrency();
+            if(lCurrency!=null) {
+                values.put(DbSchema.Table_OperDebCred.Cols.ID_CURRENCY, lCurrency.getId());
+            }
+        }
+          WCategory lCategory = credit.getCategory();
+        if(lCategory!=null) {
+            values.put(DbSchema.Table_OperDebCred.Cols.ID_CATEGORY, lCategory.getId());
+        }
         values.put(DbSchema.Table_OperDebCred.Cols.SUMMA,credit.getSumma());
-        values.put(DbSchema.Table_OperDebCred.Cols.SUMMA_VAL,credit.getSummaVal());
-        values.put(DbSchema.Table_OperDebCred.Cols.DATE_OPER,credit.getDateOper().getTime());
-        DateUtils dateUtils = new DateUtils();
-        values.put(DbSchema.Table_OperDebCred.Cols.DATE_OPER_STR,dateUtils.dateToString(credit.getDateOper(),
-                DateUtils.DATE_FORMAT_VID));
+        //values.put(DbSchema.Table_OperDebCred.Cols.SUMMA_VAL,credit.getSummaVal());
+        values.put(DbSchema.Table_OperDebCred.Cols.DATE_OPER,dateUtils.dateToString(credit.getDateOper(),DateUtils.DATE_FORMAT_SAVE));
+        //values.put(DbSchema.Table_OperDebCred.Cols.DATE_OPER_STR,dateUtils.dateToString(credit.getDateOper(),
+        //        DateUtils.DATE_FORMAT_SAVE));
 
         if(credit.getDateCreation()==null) {
-            values.put(DbSchema.BaseColumns.DATE_CREATION, new Date().getTime());
+            values.put(DbSchema.BaseColumns.DATE_CREATION,dateUtils.dateToString(new Date(),DateUtils.DATE_FORMAT_SAVE));
         }
         return values;
     }
-    public WCredit fingCreditById(double idCredit,ArrayList<WCredit> creditList){
+    public WOperation fingCreditById(double idCredit, ArrayList<WOperation> creditList){
 
-        for (WCredit item:creditList) {
+        for (WOperation item:creditList) {
             if(item.getId()==idCredit){
                 return item;
             }
         }
         return null;
     }
-    public void credit_add(WCredit credit){
+    public void credit_add(WOperation credit){
         ContentValues values = getContentValues_WCredit(credit);
         mDatabase.insert(DbSchema.Table_Credit.TABLE_NAME,null,values);
         Log.e("add credit","Success");
     }
-    public void credit_update(WCredit credit){
+    public void credit_update(WOperation credit){
         ContentValues values = getContentValues_WCredit(credit);
         mDatabase.update(
                 DbSchema.Table_Credit.TABLE_NAME,
@@ -346,7 +350,7 @@ private DbCursorWrapper queryWCategory(int isCredit){
         );
         Log.e("update credit"," Success");
     }
-    public void credit_delete(WCredit credit){
+    public void credit_delete(WOperation credit){
         mDatabase.delete(
                 DbSchema.Table_Credit.TABLE_NAME,
                 DbSchema.BaseColumns.ID+" =?",

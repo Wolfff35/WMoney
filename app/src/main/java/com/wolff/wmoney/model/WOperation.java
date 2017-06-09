@@ -7,14 +7,21 @@ import java.util.Date;
  * Created by wolff on 01.06.2017.
  */
 
-public class WCredit extends WBase implements Serializable {
+public class WOperation extends WBase implements Serializable {
     private static final long serialVersionUID = 1263051678907804396L;
     private WAccount mAccount;
-    private WCurrency mCurrency;
     private WCategory mCategory;
     private double mSumma;
-    private double mSummaVal;
     private Date mDateOper;
+    private boolean isCredit;
+
+    public boolean isCredit() {
+        return isCredit;
+    }
+
+    public void setCredit(boolean credit) {
+        isCredit = credit;
+    }
 
     public WAccount getAccount() {
         return mAccount;
@@ -22,14 +29,6 @@ public class WCredit extends WBase implements Serializable {
 
     public void setAccount(WAccount account) {
         mAccount = account;
-    }
-
-    public WCurrency getCurrency() {
-        return mCurrency;
-    }
-
-    public void setCurrency(WCurrency currency) {
-        mCurrency = currency;
     }
 
     public WCategory getCategory() {
@@ -46,14 +45,6 @@ public class WCredit extends WBase implements Serializable {
 
     public void setSumma(double summa) {
         mSumma = summa;
-    }
-
-    public double getSummaVal() {
-        return mSummaVal;
-    }
-
-    public void setSummaVal(double summaVal) {
-        mSummaVal = summaVal;
     }
 
      public Date getDateOper() {

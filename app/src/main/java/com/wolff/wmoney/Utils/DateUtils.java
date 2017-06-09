@@ -13,9 +13,13 @@ import java.util.Locale;
 public class DateUtils {
     public static final String DATE_FORMAT_STR = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String DATE_FORMAT_VID = "dd-MM-yyyy";
+    public static final String DATE_FORMAT_SAVE = "yyyy-MM-dd";
 
     public Date dateFromString(String strDate, String strFormat){
         //2017-02-02T15:30:00
+        if(strDate==null){
+            return null;
+        }
         if(strDate.equalsIgnoreCase("")|strDate.isEmpty()|strDate==null){
             return null;
         }
@@ -40,5 +44,10 @@ public class DateUtils {
         String strDate = format.format(locDate);
         return strDate;
     }
-
+    public String addZero(int num){
+        if(String.valueOf(num).length()==1){
+            return "0"+String.valueOf(num);
+        }
+        return String.valueOf(num);
+    }
 }
