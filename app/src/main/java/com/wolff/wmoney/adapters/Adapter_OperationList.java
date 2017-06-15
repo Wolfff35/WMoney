@@ -21,12 +21,12 @@ import java.util.ArrayList;
  * Created by wolff on 01.06.2017.
  */
 
-public class Adapter_CreditList extends BaseAdapter{
+public class Adapter_OperationList extends BaseAdapter{
     Context mContext;
     LayoutInflater mInflater;
     ArrayList<WOperation> mCreditList;
 
-    public Adapter_CreditList(Context context, ArrayList<WOperation> creditList){
+    public Adapter_OperationList(Context context, ArrayList<WOperation> creditList){
         mContext=context;
         mCreditList=creditList;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

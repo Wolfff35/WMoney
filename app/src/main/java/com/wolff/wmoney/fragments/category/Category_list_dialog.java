@@ -36,7 +36,7 @@ public class Category_list_dialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //return super.onCreateDialog(savedInstanceState);
         DataLab dataLab = DataLab.get(mContext);
-
+        Log.e("DIALOG","TYPE_CATEGORY = "+getArguments().getInt(TYPE_CATEGORY));
         mCategoryList = dataLab.getWCategoryList(getArguments().getInt(TYPE_CATEGORY));
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_list,null);

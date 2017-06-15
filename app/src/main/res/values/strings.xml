@@ -27,12 +27,13 @@
     <string name="account_name_label">Наименование</string>
     <string name="account_summa_label">Остаток</string>
 
-    <string name="title_activity_category_item">Статья дохода/расхода</string>
+    <string name="title_activity_category_item">Категория дохода/расхода</string>
     <string name="category_name_label">Наименование</string>
     <string name="category_describe_label">Описание</string>
     <string name="isDebit">Доход</string>
     <string name="isCredit">Затрата</string>
-    <string name="title_activity_credit_item_activity">Расходы</string>
+    <string name="title_activity_credit_item_activity">Расход</string>
+    <string name="title_activity_debit_item_activity">Доход</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="operation_name_label">Название операции</string>
@@ -40,4 +41,12 @@
     <string name="operation_summa_label">Сумма операции</string>
     <string name="title_category_item_credit">Статья</string>
     <string name="title_period_item_credit">Период</string>
+    <string name="title_activity_transfer_item">Перемещение средств</string>
+    <string name="transfer_describe_label">Описание</string>
+    <string name="transfer_summaFrom_label">Сумма (списано)</string>
+    <string name="transfer_accountFrom_item">Из кошелька</string>
+    <string name="transfer_name_label">Перевод</string>
+    <string name="transfer_accountTo_item">В кошелек</string>
+    <string name="transfer_summaTo_label">Сумма (зачислено)</string>
+    <string name="transfer_course_label">Курс</string>
 </resources>

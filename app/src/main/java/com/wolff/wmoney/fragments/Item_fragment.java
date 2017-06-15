@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -116,6 +117,7 @@ public abstract class Item_fragment extends Fragment {
         public void afterTextChanged(Editable s) {
             mIsDataChanged=true;
             setOptionsMenuVisibility();
+            Log.e("textChangedListener 1","afterTextChanged 1");
         }
     };
 }

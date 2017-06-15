@@ -35,9 +35,16 @@
             android:parentActivityName=".activities.Main_activity">
         </activity>
         <activity
-            android:name=".activities.Credit_item_activity"
-            android:label="@string/title_activity_credit_item_activity"
+            android:name=".activities.Operation_item_activity"
             android:parentActivityName=".activities.Main_activity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.wolff.wmoney.activities.Main_activity"/>
+        </activity>
+        <activity
+            android:name=".activities.Transfer_item_activity"
+            android:parentActivityName=".activities.Main_activity"
+            android:label="@string/title_activity_transfer_item">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wolff.wmoney.activities.Main_activity"/>

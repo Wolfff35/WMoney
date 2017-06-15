@@ -21,10 +21,13 @@ import com.wolff.wmoney.fragments.operation.Operation_list_fragment;
 import com.wolff.wmoney.fragments.misc.Logo_fragment;
 import com.wolff.wmoney.fragments.account.Account_list_fragment;
 import com.wolff.wmoney.fragments.currency.Currency_list_fragment;
+import com.wolff.wmoney.fragments.transfer.Transfer_list_fragment;
+import com.wolff.wmoney.localdb.DbSchema;
 import com.wolff.wmoney.model.WAccount;
 import com.wolff.wmoney.model.WCategory;
 import com.wolff.wmoney.model.WOperation;
 import com.wolff.wmoney.model.WCurrency;
+import com.wolff.wmoney.model.WTransfer;
 import com.wolff.wmoney.test_data.Test_data;
 
 
@@ -33,9 +36,11 @@ public class Main_activity extends AppCompatActivity
         Currency_list_fragment.Currency_list_fragment_listener,
         Account_list_fragment.Account_list_fragment_listener,
         Category_list_fragment.Category_list_fragment_listener,
-        Operation_list_fragment.Operation_list_fragment_listener {
+        Operation_list_fragment.Operation_list_fragment_listener,
+        Transfer_list_fragment.Transfer_list_fragment_listener{
     FloatingActionButton fab;
     private Fragment mCurrentFragment;
+    private int mTypeItemToAdd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,26 +93,34 @@ public class Main_activity extends AppCompatActivity
         switch (id){
             case R.id.nav_categories:
                 mCurrentFragment = Category_list_fragment.newInstance();
-                //displayFragment();
-                break;
-            case R.id.nav_credit:
-                mCurrentFragment = Operation_list_fragment.newInstance();
+                mTypeItemToAdd=1;
                 break;
             case R.id.nav_currencyes:
                 mCurrentFragment = Currency_list_fragment.newInstance();
-                //displayFragment();
-                break;
-            case R.id.nav_debit:
+                mTypeItemToAdd=2;
                 break;
             case R.id.nav_accounts:
                 mCurrentFragment = Account_list_fragment.newInstance();
-                //displayFragment();
+                mTypeItemToAdd=3;
+                break;
+            case R.id.nav_credit:
+                mCurrentFragment = Operation_list_fragment.newInstance(DbSchema.TYPE_OPERATION_CREDIT);
+                mTypeItemToAdd=4;
+                break;
+             case R.id.nav_debit:
+                mCurrentFragment = Operation_list_fragment.newInstance(DbSchema.TYPE_OPERATION_DEBIT);
+                 mTypeItemToAdd=5;
+                 break;
+            case R.id.nav_trans:
+                //getApplication().setTheme(R.style.AppTheme);
+                mCurrentFragment = Transfer_list_fragment.newInstance();
+                mTypeItemToAdd=6;
                 break;
             case R.id.nav_settings:
+                //getApplication().setTheme(R.style.AppThemeLight);
+                mTypeItemToAdd=0;
                 break;
-            case R.id.nav_trans:
-                break;
-            default:
+             default:
                 Log.e("DEFAULT CASE","NOTHING");
                 break;
         }
@@ -123,15 +136,11 @@ public class Main_activity extends AppCompatActivity
         fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.container_main, mCurrentFragment);
         fragmentTransaction.commit();
-        if (mCurrentFragment.getClass().getSimpleName().equalsIgnoreCase("Account_list_fragment")|
-                mCurrentFragment.getClass().getSimpleName().equalsIgnoreCase("Category_list_fragment")|
-                mCurrentFragment.getClass().getSimpleName().equalsIgnoreCase("Currency_list_fragment")|
-                mCurrentFragment.getClass().getSimpleName().equalsIgnoreCase("Operation_list_fragment")) {
+        if(mTypeItemToAdd>0){
             fab.setVisibility(View.VISIBLE);
         } else {
             fab.setVisibility(View.INVISIBLE);
         }
-     //   Log.e("DISPLAY FRAGM"," "+mCurrentFragment.getClass().getSimpleName());
     }
     private void writeTEstData(){
         Test_data test_data = new Test_data();
@@ -140,19 +149,24 @@ public class Main_activity extends AppCompatActivity
     }
     private void addNewItem(){
         Intent intent = null;
-        switch (mCurrentFragment.getClass().getSimpleName()){
-            case "Account_list_fragment":
-                intent = Account_item_activity.newIntent(getApplicationContext(),null);
-
-                break;
-            case "Category_list_fragment":
+        switch (mTypeItemToAdd){
+            case 1:
                 intent = Category_item_activity.newIntent(getApplicationContext(),null);
                 break;
-            case "Currency_list_fragment":
+            case 2:
                 intent = Currency_item_activity.newIntent(getApplicationContext(),null);
                 break;
-            case "Operation_list_fragment":
-                intent = Credit_item_activity.newIntent(getApplicationContext(),null);
+            case 3:
+                intent = Account_item_activity.newIntent(getApplicationContext(),null);
+                break;
+            case 4:
+                intent = Operation_item_activity.newIntent(getApplicationContext(),null,DbSchema.TYPE_OPERATION_CREDIT);
+                break;
+            case 5:
+                intent = Operation_item_activity.newIntent(getApplicationContext(),null,DbSchema.TYPE_OPERATION_DEBIT);
+                break;
+            case 6:
+                intent = Transfer_item_activity.newIntent(getApplicationContext(),null);
                 break;
             default:
                 break;
@@ -161,14 +175,13 @@ public class Main_activity extends AppCompatActivity
     }
     @Override
     public void onCurrencyItemClick(WCurrency currency) {
-        Log.e("==onCurrencyItemClick","==onCurrencyItemClick");
         Intent intent = Currency_item_activity.newIntent(getApplicationContext(),currency);
         startActivity(intent);
     }
 
     @Override
     public void onAccountItemClick(WAccount account) {
-     Log.e("ACCOUNT"," ITEM CLICK "+account.getName());
+     //Log.e("ACCOUNT"," ITEM CLICK "+account.getName());
         Intent intent = Account_item_activity.newIntent(getApplicationContext(),account);
         startActivity(intent);
     }
@@ -177,15 +190,23 @@ public class Main_activity extends AppCompatActivity
     public void onCategoryItemClick(WCategory category) {
         Intent intent = Category_item_activity.newIntent(getApplicationContext(),category);
         startActivity(intent);
-        Log.e("CATEGORY"," ITEM CLICK "+category.getName());
+        //Log.e("CATEGORY"," ITEM CLICK "+category.getName());
 
     }
 
     @Override
-    public void onCreditItemClick(WOperation credit) {
-        Intent intent = Credit_item_activity.newIntent(getApplicationContext(),credit);
+    public void onOperationItemClick(WOperation operation, int typeOperation) {
+        Intent intent = Operation_item_activity.newIntent(getApplicationContext(),operation,typeOperation);
         startActivity(intent);
-        Log.e("CATEGORY"," ITEM CLICK "+credit.getName());
+        //Log.e("CATEGORY"," ITEM CLICK "+operation.getName());
+
+    }
+
+    @Override
+    public void onTransferItemClick(WTransfer transfer) {
+        Intent intent = Transfer_item_activity.newIntent(getApplicationContext(),transfer);
+        startActivity(intent);
+        Log.e("TRANSFER"," ITEM CLICK "+transfer.getName());
 
     }
 }

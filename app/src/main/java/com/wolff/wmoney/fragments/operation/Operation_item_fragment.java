@@ -25,6 +25,7 @@ import com.wolff.wmoney.fragments.account.Account_list_dialog;
 import com.wolff.wmoney.fragments.category.Category_list_dialog;
 import com.wolff.wmoney.fragments.misc.DatePicker_dialog;
 import com.wolff.wmoney.localdb.DataLab;
+import com.wolff.wmoney.localdb.DbSchema;
 import com.wolff.wmoney.model.WAccount;
 import com.wolff.wmoney.model.WCategory;
 import com.wolff.wmoney.model.WOperation;
@@ -45,7 +46,12 @@ public class Operation_item_fragment extends Item_fragment {
     public static final int DIALOG_REQUEST_CATEGORY = 3;
 
     private static final String ARG_OPERATION_ITEM = "WCredItem";
+    private static final String ARG_OPERATION_TYPE = "WItemType";
     private WOperation mOperationItem;
+    private int mTypeOperation;
+
+    private WAccount mOldAccount;
+    private double mOldSumma;
 
     EditText edOperation_Name;
     EditText edOperation_Describe;
@@ -58,9 +64,10 @@ public class Operation_item_fragment extends Item_fragment {
     TextInputLayout edOperation_Name_layout;
     TextInputLayout edOperation_Summa_layout;
 
-    public static Operation_item_fragment newIntance(WOperation item){
+    public static Operation_item_fragment newIntance(WOperation item,int typeOperation){
         Bundle args = new Bundle();
         args.putSerializable(ARG_OPERATION_ITEM,item);
+        args.putInt(ARG_OPERATION_TYPE,typeOperation);
         Operation_item_fragment fragment = new Operation_item_fragment();
         fragment.setArguments(args);
         return fragment;
@@ -74,11 +81,18 @@ public class Operation_item_fragment extends Item_fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mOperationItem = (WOperation)getArguments().getSerializable(ARG_OPERATION_ITEM);
+        mTypeOperation = getArguments().getInt(ARG_OPERATION_TYPE);
         if(mOperationItem ==null){
             mOperationItem = new WOperation();
             mIsNewItem=true;
             mIsEditable=true;
             mOperationItem.setDateOper(new Date());
+
+            mOldAccount = null;
+            mOldSumma = 0;
+        }else {
+            mOldAccount = mOperationItem.getAccount();
+            mOldSumma = mOperationItem.getSumma();
         }
     }
 
@@ -152,10 +166,11 @@ public class Operation_item_fragment extends Item_fragment {
     public void saveItem() {
         super.saveItem();
         if (!isFillingOk()) return;
+        calculateOperation(mTypeOperation,mOldAccount,mOperationItem.getAccount(),mOldSumma,mOperationItem.getSumma());
         if(mIsNewItem){
-            DataLab.get(getContext()).credit_add(mOperationItem);
+            DataLab.get(getContext()).operation_add(mOperationItem,mTypeOperation);
         }else {
-            DataLab.get(getContext()).credit_update(mOperationItem);
+            DataLab.get(getContext()).operation_update(mOperationItem,mTypeOperation);
         }
         getActivity().finish();
     }
@@ -190,7 +205,8 @@ public class Operation_item_fragment extends Item_fragment {
     @Override
     public void deleteItem() {
         super.deleteItem();
-        DataLab.get(getContext()).credit_delete(mOperationItem);
+        calculateOperation(mTypeOperation,mOldAccount,null,mOldSumma,0);
+        DataLab.get(getContext()).operation_delete(mOperationItem,mTypeOperation);
         getActivity().finish();
     }
 
@@ -259,7 +275,7 @@ public class Operation_item_fragment extends Item_fragment {
             DialogFragment dialog = new Category_list_dialog();
             dialog.setTargetFragment(Operation_item_fragment.this,DIALOG_REQUEST_CATEGORY);
             Bundle args = new Bundle();
-            args.putInt(TYPE_CATEGORY,1);
+            args.putInt(TYPE_CATEGORY,mTypeOperation);
             dialog.setArguments(args);
             dialog.show(getFragmentManager(),dialog.getClass().getName());
         }
@@ -290,4 +306,79 @@ public class Operation_item_fragment extends Item_fragment {
             }
         }
     };
+
+    //==============================================================================================
+    public void calculateOperation(int typeOper, WAccount oldAccount,WAccount newAccount,double oldSumma,double newSumma){
+        Log.e("==","================================================================================");
+        Log.e("DATA"," oldSumma = "+oldSumma+"; newSumma = "+newSumma);
+        //typeOper
+        // 1 - Debit,
+        // 2 - Credit
+
+        //type
+        // 1 - add new - old=null,new!=null
+        // 2 - change old!=null,new!=null
+        // 3 - delete old!=null,new=null
+        if(oldAccount==null&&newAccount!=null){
+            Log.e("CALCULATE"," ДОБАВЛЕНИЕ");
+            if(typeOper== DbSchema.TYPE_OPERATION_CREDIT){
+                newAccount.setSumma(newAccount.getSumma()-newSumma);
+                DataLab.get(getContext()).account_update(newAccount);
+            }else if(typeOper==DbSchema.TYPE_OPERATION_DEBIT){
+                newAccount.setSumma(newAccount.getSumma()+newSumma);
+                DataLab.get(getContext()).account_update(newAccount);
+            }else {
+                Log.e("CALC","НЕпонятная операция добавления");
+            }
+        }else if(oldAccount!=null&&newAccount!=null){
+            Log.e("CALCULATE"," ИЗМЕНЕНИЕ");
+        if(oldAccount.getId()==newAccount.getId()){
+            // изменилась только сумма
+            if(oldSumma!=newSumma){
+                if(typeOper== DbSchema.TYPE_OPERATION_CREDIT) {
+                    newAccount.setSumma(newAccount.getSumma() + oldSumma - newSumma);//???
+                    DataLab.get(getContext()).account_update(newAccount);
+                }else if(typeOper==DbSchema.TYPE_OPERATION_DEBIT){
+                    newAccount.setSumma(newAccount.getSumma() - oldSumma + newSumma);
+                    DataLab.get(getContext()).account_update(newAccount);
+                }
+            }
+        }else {
+            //изменились кошельки
+            if(typeOper== DbSchema.TYPE_OPERATION_CREDIT) {
+                oldAccount.setSumma(oldAccount.getSumma() + oldSumma);
+                DataLab.get(getContext()).account_update(oldAccount);
+
+                newAccount.setSumma(newAccount.getSumma() - newSumma);
+                DataLab.get(getContext()).account_update(newAccount);
+            }else if(typeOper==DbSchema.TYPE_OPERATION_DEBIT){
+                oldAccount.setSumma(oldAccount.getSumma() - oldSumma);
+                DataLab.get(getContext()).account_update(oldAccount);
+
+                newAccount.setSumma(newAccount.getSumma() + newSumma);
+                DataLab.get(getContext()).account_update(newAccount);
+
+            }
+
+
+        }
+
+        }else if(oldAccount!=null&&newAccount==null){
+            Log.e("CALCULATE"," УДАЛЕНИЕ");
+            if(typeOper== DbSchema.TYPE_OPERATION_CREDIT){
+                oldAccount.setSumma(oldAccount.getSumma()+oldSumma);
+                DataLab.get(getContext()).account_update(oldAccount);
+            }else if(typeOper==DbSchema.TYPE_OPERATION_DEBIT){
+                oldAccount.setSumma(oldAccount.getSumma()-oldSumma);
+                DataLab.get(getContext()).account_update(oldAccount);
+            }else {
+                Log.e("CALC","НЕпонятная операция удаления");
+            }
+
+        }else{
+            Log.e("CALCULATE"," НЕПОНЯТНАЯ ОПЕРАЦИЯ");
+        }
+        Log.e("==","================================================================================");
+    }
+
 }

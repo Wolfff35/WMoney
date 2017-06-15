@@ -1,0 +1,261 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+
+              tools:context="com.wolff.wmoney.fragments.transfer.Transfer_item_fragment"
+              android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edTransfer_Name_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_weight="8"
+            app:hintTextAppearance="@style/MyHintText">
+
+            <EditText
+                android:id="@+id/edTransfer_Name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="8"
+                android:ems="10"
+                android:hint="@string/transfer_name_label"
+                android:inputType="textPersonName"
+                android:text=""
+                android:theme="@style/MyEditText"/>
+
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/tvTransfer_Period_label"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:labelFor="@+id/imTransfer_Period"
+            android:text="@string/title_period_item_credit"/>
+
+        <Button
+            android:id="@+id/imTransfer_Period"
+            style="@android:style/Widget.Button.Inset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="3"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/tvTransfer_accountFrom_label"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="3"
+            android:gravity="center_vertical"
+            android:labelFor="@+id/imTransfer_accountFrom"
+            android:text="@string/transfer_accountFrom_item"/>
+
+        <ImageView
+            android:id="@+id/ivAccountFromPicture"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="20"/>
+
+        <Button
+            android:id="@+id/imTransfer_accountFrom"
+            style="@android:style/Widget.Button.Inset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="120"
+            android:contentDescription="@string/account_name_label"
+            android:elevation="4dp"
+            app:srcCompat="@mipmap/ic_launcher"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edTransfer_summaFrom_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_weight="8"
+            app:hintTextAppearance="@style/MyHintText">
+
+            <EditText
+                android:id="@+id/edTransfer_summaFrom"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="120dp"
+                android:ems="10"
+                android:hint="@string/transfer_summaFrom_label"
+                android:inputType="numberDecimal"
+                android:text=""
+                android:theme="@style/MyEditText"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tvTransfer_currencyFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="18"
+            android:gravity="center_vertical"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/tvTransfer_accountTo_label"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="3"
+            android:gravity="center_vertical"
+            android:labelFor="@+id/imTransfer_accountTo"
+            android:text="@string/transfer_accountTo_item"/>
+
+        <ImageView
+            android:id="@+id/ivAccountToPicture"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="20"/>
+
+        <Button
+            android:id="@+id/imTransfer_accountTo"
+            style="@android:style/Widget.Button.Inset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="120"
+            android:contentDescription="@string/account_name_label"
+            android:elevation="4dp"
+            app:srcCompat="@mipmap/ic_launcher"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edTransfer_summaTo_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_weight="8"
+            app:hintTextAppearance="@style/MyHintText">
+
+            <EditText
+                android:id="@+id/edTransfer_summaTo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="120dp"
+                android:ems="10"
+                android:hint="@string/transfer_summaTo_label"
+                android:inputType="numberDecimal"
+                android:text=""
+                android:theme="@style/MyEditText"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tvTransfer_currencyTo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="18"
+            android:gravity="center_vertical"/>
+
+    </LinearLayout>
+*
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/tvTransfer_course_label"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="12.10"
+            android:ems="1"
+            android:hint="@string/transfer_course_label"
+            android:inputType="numberDecimal"
+            android:labelFor="@+id/edTransfer_course"
+            android:text=""
+            android:theme="@style/MyEditText"/>
+
+        <EditText
+            android:id="@+id/edTransfer_course"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_weight="25"
+            android:gravity="center_vertical"/>
+
+    </LinearLayout>
+
+**
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edTransfer_describe_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_weight="3"
+            app:hintTextAppearance="@style/MyHintText">
+
+            <EditText
+                android:id="@+id/edTransfer_describe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="8"
+                android:ems="10"
+                android:hint="@string/transfer_describe_label"
+                android:inputType="textPersonName"
+                android:lines="3"
+                android:text=""
+                android:theme="@style/MyEditText"/>
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

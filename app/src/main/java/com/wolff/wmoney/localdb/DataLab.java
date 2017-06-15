@@ -11,6 +11,7 @@ import com.wolff.wmoney.model.WAccount;
 import com.wolff.wmoney.model.WCategory;
 import com.wolff.wmoney.model.WOperation;
 import com.wolff.wmoney.model.WCurrency;
+import com.wolff.wmoney.model.WTransfer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -271,14 +272,15 @@ private DbCursorWrapper queryWCategory(int isCredit){
         Log.e("delete category","Success");
     }
     //==================================================================================================
-    private DbCursorWrapper queryWCredit(){
+    private DbCursorWrapper queryWOperation(int typeOperation){
        String selection=null;
         String[] selectionArgs = null;
         String[] columns = null;
         String groupBy = null;
         String having = null;
         String orderBy = null;
-         Cursor cursor = mDatabase.query(DbSchema.Table_Credit.TABLE_NAME,
+        String table = getOperationTableNameByType(typeOperation);
+         Cursor cursor = mDatabase.query(table,
                 columns,
                 selection,
                 selectionArgs,
@@ -287,18 +289,18 @@ private DbCursorWrapper queryWCategory(int isCredit){
                 orderBy);
         return new DbCursorWrapper(cursor);
     }
-    public ArrayList<WOperation> getWCreditList(Context context){
-        DbCursorWrapper cursorWrapper = queryWCredit();
+    public ArrayList<WOperation> getWOperationList(Context context, int typeOperation){
+        DbCursorWrapper cursorWrapper = queryWOperation(typeOperation);
         ArrayList<WOperation> creditList = new ArrayList<>();
         cursorWrapper.moveToFirst();
         while (!cursorWrapper.isAfterLast()) {
-            creditList.add(cursorWrapper.getWCredit(context));
+            creditList.add(cursorWrapper.getWOperation(context));
             cursorWrapper.moveToNext();
         }
         cursorWrapper.close();
         return creditList;
     }
-    private static ContentValues getContentValues_WCredit(WOperation credit){
+    private static ContentValues getContentValues_WOperation(WOperation credit){
         DateUtils dateUtils = new DateUtils();
         ContentValues values = new ContentValues();
         values.put(DbSchema.BaseColumns.NAME,credit.getName());
@@ -306,20 +308,17 @@ private DbCursorWrapper queryWCategory(int isCredit){
         WAccount lAccount = credit.getAccount();
         if(lAccount!=null) {
             values.put(DbSchema.Table_OperDebCred.Cols.ID_ACCOUNT, lAccount.getId());
-            WCurrency lCurrency = credit.getAccount().getCurrency();
-            if(lCurrency!=null) {
-                values.put(DbSchema.Table_OperDebCred.Cols.ID_CURRENCY, lCurrency.getId());
-            }
+            //WCurrency lCurrency = credit.getAccount().getCurrency();
+            //if(lCurrency!=null) {
+            //    values.put(DbSchema.Table_OperDebCred.Cols.ID_CURRENCY, lCurrency.getId());
+            //}
         }
           WCategory lCategory = credit.getCategory();
         if(lCategory!=null) {
             values.put(DbSchema.Table_OperDebCred.Cols.ID_CATEGORY, lCategory.getId());
         }
         values.put(DbSchema.Table_OperDebCred.Cols.SUMMA,credit.getSumma());
-        //values.put(DbSchema.Table_OperDebCred.Cols.SUMMA_VAL,credit.getSummaVal());
         values.put(DbSchema.Table_OperDebCred.Cols.DATE_OPER,dateUtils.dateToString(credit.getDateOper(),DateUtils.DATE_FORMAT_SAVE));
-        //values.put(DbSchema.Table_OperDebCred.Cols.DATE_OPER_STR,dateUtils.dateToString(credit.getDateOper(),
-        //        DateUtils.DATE_FORMAT_SAVE));
 
         if(credit.getDateCreation()==null) {
             values.put(DbSchema.BaseColumns.DATE_CREATION,dateUtils.dateToString(new Date(),DateUtils.DATE_FORMAT_SAVE));
@@ -335,29 +334,119 @@ private DbCursorWrapper queryWCategory(int isCredit){
         }
         return null;
     }
-    public void credit_add(WOperation credit){
-        ContentValues values = getContentValues_WCredit(credit);
-        mDatabase.insert(DbSchema.Table_Credit.TABLE_NAME,null,values);
-        Log.e("add credit","Success");
+    public void operation_add(WOperation oper,int typeOperation){
+        ContentValues values = getContentValues_WOperation(oper);
+        String table = getOperationTableNameByType(typeOperation);
+        mDatabase.insert(table,null,values);
+        Log.e("add oper","Success");
     }
-    public void credit_update(WOperation credit){
-        ContentValues values = getContentValues_WCredit(credit);
+    private String getOperationTableNameByType(int type){
+        if(type==DbSchema.TYPE_OPERATION_CREDIT){
+            return DbSchema.Table_Credit.TABLE_NAME;
+        }else {
+            return DbSchema.Table_Debit.TABLE_NAME;
+        }
+    }
+
+    public void operation_update(WOperation oper,int typeOperation){
+        ContentValues values = getContentValues_WOperation(oper);
+        String table = getOperationTableNameByType(typeOperation);
         mDatabase.update(
-                DbSchema.Table_Credit.TABLE_NAME,
+                table,
                 values,
                 DbSchema.BaseColumns.ID+" = ?",
-                new String[]{String.valueOf(credit.getId())}
+                new String[]{String.valueOf(oper.getId())}
         );
-        Log.e("update credit"," Success");
+        Log.e("update oper"," Success");
     }
-    public void credit_delete(WOperation credit){
+    public void operation_delete(WOperation oper, int typeOperation){
+        String table = getOperationTableNameByType(typeOperation);
         mDatabase.delete(
-                DbSchema.Table_Credit.TABLE_NAME,
+                table,
                 DbSchema.BaseColumns.ID+" =?",
-                new String[]{String.valueOf(credit.getId())}
+                new String[]{String.valueOf(oper.getId())}
         );
-        Log.e("delete credit","Success");
+        Log.e("delete oper","Success");
     }
+
+    //==================================================================================================
+    private DbCursorWrapper queryWTransfer(){
+        String selection=null;
+        String[] selectionArgs = null;
+        String[] columns = null;
+        String groupBy = null;
+        String having = null;
+        String orderBy = null;
+        String table = DbSchema.Table_Transfer.TABLE_NAME;
+        Cursor cursor = mDatabase.query(table,
+                columns,
+                selection,
+                selectionArgs,
+                groupBy,
+                having,
+                orderBy);
+        return new DbCursorWrapper(cursor);
+    }
+    public ArrayList<WTransfer> getWTransferList(Context context){
+        DbCursorWrapper cursorWrapper = queryWTransfer();
+        ArrayList<WTransfer> transferList = new ArrayList<>();
+        cursorWrapper.moveToFirst();
+        while (!cursorWrapper.isAfterLast()) {
+            transferList.add(cursorWrapper.getWTransfer(context));
+            cursorWrapper.moveToNext();
+        }
+        cursorWrapper.close();
+        return transferList;
+    }
+    private static ContentValues getContentValues_WTransfer(WTransfer transfer){
+        DateUtils dateUtils = new DateUtils();
+        ContentValues values = new ContentValues();
+        values.put(DbSchema.BaseColumns.NAME,transfer.getName());
+        values.put(DbSchema.BaseColumns.DESCRIBE,transfer.getDescribe());
+        WAccount lAccountFrom = transfer.getAccountFrom();
+        if(lAccountFrom!=null) {
+            values.put(DbSchema.Table_Transfer.Cols.ID_ACCOUNT_FROM, lAccountFrom.getId());
+          }
+        WAccount lAccountTo = transfer.getAccountTo();
+        if(lAccountTo!=null) {
+            values.put(DbSchema.Table_Transfer.Cols.ID_ACCOUNT_TO, lAccountTo.getId());
+        }
+        values.put(DbSchema.Table_Transfer.Cols.SUMMA_FROM,transfer.getSummaFrom());
+        values.put(DbSchema.Table_Transfer.Cols.SUMMA_TO,transfer.getSummaTo());
+        values.put(DbSchema.Table_Transfer.Cols.DATE_OPER,dateUtils.dateToString(transfer.getDateOper(),DateUtils.DATE_FORMAT_SAVE));
+
+        if(transfer.getDateCreation()==null) {
+            values.put(DbSchema.BaseColumns.DATE_CREATION,dateUtils.dateToString(new Date(),DateUtils.DATE_FORMAT_SAVE));
+        }
+        return values;
+    }
+     public void transfer_add(WTransfer transfer){
+        ContentValues values = getContentValues_WTransfer(transfer);
+        String table = DbSchema.Table_Transfer.TABLE_NAME;
+        mDatabase.insert(table,null,values);
+        Log.e("add transfer","Success");
+    }
+     public void transfer_update(WTransfer transfer){
+        ContentValues values = getContentValues_WTransfer(transfer);
+        String table = DbSchema.Table_Transfer.TABLE_NAME;
+        mDatabase.update(
+                table,
+                values,
+                DbSchema.BaseColumns.ID+" = ?",
+                new String[]{String.valueOf(transfer.getId())}
+        );
+        Log.e("update transfer"," Success");
+    }
+    public void transfer_delete(WTransfer transfer){
+        String table = DbSchema.Table_Transfer.TABLE_NAME;
+        mDatabase.delete(
+                table,
+                DbSchema.BaseColumns.ID+" =?",
+                new String[]{String.valueOf(transfer.getId())}
+        );
+        Log.e("delete transfer","Success");
+    }
+
 
 
 }

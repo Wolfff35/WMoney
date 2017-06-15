@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.wolff.wmoney.R;
 import com.wolff.wmoney.localdb.DataLab;
+import com.wolff.wmoney.localdb.DbSchema;
 import com.wolff.wmoney.model.WAccount;
 import com.wolff.wmoney.model.WCategory;
 import com.wolff.wmoney.model.WOperation;
@@ -19,6 +20,17 @@ public class Test_data {
     public void fillTestData(Context context){
         DataLab dataLab = DataLab.get(context);
         WOperation credit1 = new WOperation();
+        credit1.setName("Доход 1");
+        credit1.setCategory(dataLab.fingCategoryById(1,dataLab.getWCategoryList(0)));
+        //credit1.setCurrency(dataLab.fingCurrencyById(1,dataLab.getWCurrencyList()));
+        credit1.setSumma(1);
+        credit1.setAccount(dataLab.fingAccountById(1,dataLab.getWAccountList(context)));
+        credit1.setDateOper(new Date());
+        //credit1.setSummaVal(1000);
+        credit1.setDateCreation(new Date());
+        dataLab.operation_add(credit1, DbSchema.TYPE_OPERATION_DEBIT);
+
+        /*     WOperation credit1 = new WOperation();
         credit1.setName("расход 1");
         credit1.setCategory(dataLab.fingCategoryById(1,dataLab.getWCategoryList(0)));
         //credit1.setCurrency(dataLab.fingCurrencyById(1,dataLab.getWCurrencyList()));
@@ -27,7 +39,7 @@ public class Test_data {
         credit1.setDateOper(new Date());
         //credit1.setSummaVal(1000);
         credit1.setDateCreation(new Date());
-        dataLab.credit_add(credit1);
+        dataLab.operation_add(credit1, DbSchema.TYPE_OPERATION_CREDIT);
 
         WOperation credit2 = new WOperation();
         credit2.setName("расход 2");
@@ -38,7 +50,7 @@ public class Test_data {
         credit2.setDateOper(new Date());
         //credit2.setSummaVal(8985);
         credit2.setDateCreation(new Date());
-        dataLab.credit_add(credit2);
+        dataLab.operation_add(credit2,DbSchema.TYPE_OPERATION_CREDIT);
 
             WCurrency curr = new WCurrency();
         curr.setName("UAH");
@@ -79,7 +91,7 @@ public class Test_data {
         category3.setName("Category 3");
         category3.setDescribe("Desc category 3");
         dataLab.category_add(category3);
-
+*/
     }
 
 }
