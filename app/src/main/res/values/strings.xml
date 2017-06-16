@@ -49,4 +49,5 @@
     <string name="transfer_accountTo_item">В кошелек</string>
     <string name="transfer_summaTo_label">Сумма (зачислено)</string>
     <string name="transfer_course_label">Курс</string>
+    <string name="title_activity_google_drive_sync">Синхронизация</string>
 </resources>

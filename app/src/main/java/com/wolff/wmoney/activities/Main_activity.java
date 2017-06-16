@@ -118,6 +118,9 @@ public class Main_activity extends AppCompatActivity
                 break;
             case R.id.nav_settings:
                 //getApplication().setTheme(R.style.AppThemeLight);
+                mCurrentFragment =null;
+                Intent intent = new GoogleDriveSync_activity().newIntent(getBaseContext());
+                startActivity(intent);
                 mTypeItemToAdd=0;
                 break;
              default:
@@ -132,6 +135,7 @@ public class Main_activity extends AppCompatActivity
 
      //=============================================================================================
     private void displayFragment() {
+        if(mCurrentFragment==null) return;
         FragmentTransaction fragmentTransaction;
         fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.container_main, mCurrentFragment);
