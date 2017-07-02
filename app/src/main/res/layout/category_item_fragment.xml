@@ -61,6 +61,6 @@
         android:layout_height="wrap_content"
         android:checked="false"
         android:pointerIcon="none"
-        android:textOff="@string/isDebit"
-        android:textOn="@string/isCredit"/>
+        android:textOff="@string/category_isDebit"
+        android:textOn="@string/category_isCredit"/>
 </LinearLayout>

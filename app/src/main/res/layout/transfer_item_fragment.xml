@@ -49,7 +49,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:labelFor="@+id/imTransfer_Period"
-            android:text="@string/title_period_item_credit"/>
+            android:text="@string/operation_period_item"/>
 
         <Button
             android:id="@+id/imTransfer_Period"

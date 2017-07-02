@@ -48,7 +48,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="@string/title_period_item_credit"/>
+            android:text="@string/operation_period_item"/>
 
         <Button
             android:id="@+id/imOperation_Period"
@@ -139,7 +139,7 @@
              android:layout_marginLeft="10dp"
              android:layout_weight="1"
              android:gravity="center_vertical"
-             android:text="@string/title_category_item_credit"/>
+             android:text="@string/operation_category_item"/>
 
          <Button
              android:id="@+id/imOperation_category"

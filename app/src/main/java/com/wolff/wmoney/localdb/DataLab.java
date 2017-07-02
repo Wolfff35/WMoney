@@ -73,6 +73,8 @@ public class DataLab {
         values.put(DbSchema.BaseColumns.DESCRIBE,currency.getDescribe());
         if(currency.getDateCreation()==null) {
             values.put(DbSchema.BaseColumns.DATE_CREATION, new DateUtils().dateToString(new Date(),DateUtils.DATE_FORMAT_SAVE));
+        }else {
+            values.put(DbSchema.BaseColumns.DATE_CREATION, new DateUtils().dateToString(currency.getDateCreation(),DateUtils.DATE_FORMAT_SAVE));
         }
         return values;
     }
@@ -148,6 +150,8 @@ public class DataLab {
         values.put(DbSchema.Table_Account.Cols.SUMMA,account.getSumma());
         if(account.getDateCreation()==null) {
             values.put(DbSchema.BaseColumns.DATE_CREATION, new DateUtils().dateToString(new Date(),DateUtils.DATE_FORMAT_SAVE));
+        }else {
+            values.put(DbSchema.BaseColumns.DATE_CREATION, new DateUtils().dateToString(account.getDateCreation(),DateUtils.DATE_FORMAT_SAVE));
         }
         return values;
     }
@@ -236,6 +240,8 @@ private DbCursorWrapper queryWCategory(int isCredit){
         values.put(DbSchema.Table_Category.Cols.ISCREDIT,((category.isCredit()?1:0)));
         if(category.getDateCreation()==null) {
             values.put(DbSchema.BaseColumns.DATE_CREATION, new DateUtils().dateToString(new Date(),DateUtils.DATE_FORMAT_SAVE));
+        }else {
+            values.put(DbSchema.BaseColumns.DATE_CREATION, new DateUtils().dateToString(category.getDateCreation(),DateUtils.DATE_FORMAT_SAVE));
         }
         return values;
     }
@@ -322,6 +328,8 @@ private DbCursorWrapper queryWCategory(int isCredit){
 
         if(credit.getDateCreation()==null) {
             values.put(DbSchema.BaseColumns.DATE_CREATION,dateUtils.dateToString(new Date(),DateUtils.DATE_FORMAT_SAVE));
+        }else {
+            values.put(DbSchema.BaseColumns.DATE_CREATION,dateUtils.dateToString(credit.getDateCreation(),DateUtils.DATE_FORMAT_SAVE));
         }
         return values;
     }
@@ -417,6 +425,8 @@ private DbCursorWrapper queryWCategory(int isCredit){
 
         if(transfer.getDateCreation()==null) {
             values.put(DbSchema.BaseColumns.DATE_CREATION,dateUtils.dateToString(new Date(),DateUtils.DATE_FORMAT_SAVE));
+        }else {
+            values.put(DbSchema.BaseColumns.DATE_CREATION,dateUtils.dateToString(transfer.getDateCreation(),DateUtils.DATE_FORMAT_SAVE));
         }
         return values;
     }

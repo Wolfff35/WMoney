@@ -93,27 +93,33 @@ public class Main_activity extends AppCompatActivity
         switch (id){
             case R.id.nav_categories:
                 mCurrentFragment = Category_list_fragment.newInstance();
+                this.setTitle(R.string.title_activity_category_list);
                 mTypeItemToAdd=1;
                 break;
             case R.id.nav_currencyes:
                 mCurrentFragment = Currency_list_fragment.newInstance();
+                this.setTitle(R.string.title_activity_currency_list);
                 mTypeItemToAdd=2;
                 break;
             case R.id.nav_accounts:
                 mCurrentFragment = Account_list_fragment.newInstance();
+                this.setTitle(R.string.title_activity_account_list);
                 mTypeItemToAdd=3;
                 break;
             case R.id.nav_credit:
                 mCurrentFragment = Operation_list_fragment.newInstance(DbSchema.TYPE_OPERATION_CREDIT);
+                this.setTitle(R.string.title_activity_credit_list);
                 mTypeItemToAdd=4;
                 break;
              case R.id.nav_debit:
                 mCurrentFragment = Operation_list_fragment.newInstance(DbSchema.TYPE_OPERATION_DEBIT);
+                 this.setTitle(R.string.title_activity_debit_list);
                  mTypeItemToAdd=5;
                  break;
             case R.id.nav_trans:
                 //getApplication().setTheme(R.style.AppTheme);
                 mCurrentFragment = Transfer_list_fragment.newInstance();
+                this.setTitle(R.string.title_activity_transfer_list);
                 mTypeItemToAdd=6;
                 break;
             case R.id.nav_settings:

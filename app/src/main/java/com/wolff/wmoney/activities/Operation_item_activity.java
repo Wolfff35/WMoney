@@ -34,9 +34,9 @@ public class Operation_item_activity extends AppCompatActivity {
        //android:label="@string/title_activity_credit_item_activity"
 
         if(mTypeOperaion== DbSchema.TYPE_OPERATION_CREDIT) {
-            this.setTitle(getResources().getString(R.string.title_activity_credit_item_activity));
+            this.setTitle(getResources().getString(R.string.title_activity_credit_item));
         }else {
-            this.setTitle(getResources().getString(R.string.title_activity_debit_item_activity));
+            this.setTitle(getResources().getString(R.string.title_activity_debit_item));
         }
         FragmentTransaction fragmentTransaction;
         fragmentTransaction = getFragmentManager().beginTransaction();

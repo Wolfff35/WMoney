@@ -5,7 +5,7 @@ android {
         debug {
             keyAlias 'keywmoney'
             keyPassword 'Wolfff777555'
-            storeFile file('D:/ANDROID/!KeyStore/wolff.jks')
+            storeFile file('P:/DEVELOP/ANDROID/!KeyStore/wolff.jks')
             storePassword 'Wolfff777555'
         }
     }
